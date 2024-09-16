@@ -1,0 +1,60 @@
+<!--
+  Logback configuration for the ParserX utility.
+  This file configures logging, which is used throughout the utility to provide
+  insights during parsing operations (info level), detailed parsing steps (debug level),
+  and error handling (error level).
+-->
+<configuration>
+
+    <!--
+      Appender: Directs the log output to the console (STDOUT).
+      This is useful for local development and testing, where you want to see logs directly in the terminal.
+      You can later configure file-based logging or other appenders for production environments.
+    -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+        <!--
+          Encoder: Controls the format of log messages.
+          This pattern outputs the timestamp, thread, log level, logger name (usually the class), and the log message.
+          This is important for tracking when and where the log events occur in the DelimitedInputParser.
+        -->
+        <encoder>
+            <!--
+              Pattern Breakdown:
+              %d{yyyy-MM-dd HH:mm:ss}: Shows the date and time in a clear format for timestamping the logs.
+              [%thread]: Displays the thread name, which is useful in multi-threaded environments.
+              %-5level: Pads the log level (DEBUG, INFO, ERROR) to 5 characters for alignment.
+              %logger{36}: Shows the logger name, typically the class name (DelimitedInputParser).
+              %msg: The log message itself, such as parsing details or error information.
+              %n: Adds a newline after each log entry.
+            -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+      Root Logger: Defines the default logging level for the entire application.
+      In this configuration, we're setting it to DEBUG, which means that all log messages of level DEBUG or higher
+      (INFO, WARN, ERROR) will be displayed in the console.
+
+      - INFO logs are useful for general parsing steps (e.g., indicating when parsing starts or completes).
+      - DEBUG logs provide detailed information, such as which delimiters are used and the internal field splitting.
+      - ERROR logs capture issues such as parsing failures or field count mismatches.
+
+      The root logger applies to all classes unless overridden for specific packages or classes.
+    -->
+    <root level="debug">
+        <!-- STDOUT Appender: Directs all root logger output to the console. -->
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!--
+      Logger for the DelimitedInputParser class:
+      This logger is configured to show detailed debug-level logs specifically for the parser,
+      which is useful when troubleshooting or tracking how fields are split.
+    -->
+    <logger name="tan.jerry.DelimitedInputParser" level="debug">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+</configuration>
